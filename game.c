@@ -2,16 +2,16 @@
 
 game_t game;
 
-void init_game() {
-    // create product
-    game.product.name = "SUPER CLOUD MACHINE v6";
-    game.product.features = 100;
-    game.product.bugs = 0;
+void game_init() {
+    product_init(&game.product);
 }
 
-void print_game() {
-    product_t *product = &game.product;
-    printf("Name:%s\n", product->name);
-    printf("Features Remaining:%d\n", product->features);
-    printf("Bugs Remaining:%d\n", product->bugs);
+void game_print() {
+    product_print(&game.product);
+}
+
+void game_print_employees() {
+    for (int i = 0; i < MAX_EMPLOYEES; i++) {
+        employee_print(&game.employees[i]);
+    }
 }

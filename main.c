@@ -7,13 +7,12 @@ void show_main();
 
 void show_product() {
     print_title("PRODUCT STATUS");
-
-    print_game();
+    product_print(&game.product);
 
     menu_entry_t menu[] = {
         {.label = "Product Status", .cb = show_product},
         {.label = "Business"},
-        {.label = "Employees"},
+        {.label = "Employees", .cb = game_print_employees},
         {.label = "Back", .cb = show_main},
     };
 
@@ -24,7 +23,7 @@ void show_main() {
     print_title("MAIN");
     menu_entry_t menu[] = {
         {.label = "Product Status", .cb = show_product},
-        {.label = "Employees"},
+        {.label = "Employees", .cb = game_print_employees},
         {.label = "Quit"},
     };
 
@@ -35,7 +34,7 @@ int main() {
     printf("Welcome to the Micromanager simulator");
     printf("You have been chosen as the manager for a failing business unit.\nPlease save the company!\n\n");
 
-    init_game();
+    game_init();
 
     show_main();
     printf("Bye!\n");
