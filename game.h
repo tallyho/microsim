@@ -5,11 +5,13 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-#define MAX_EMPLOYEES 32
+#define GAME_EMPLOYEES_MAX 32
+#define GAME_EMPLOYEES_START_MIN 2
+#define GAME_EMPLOYEES_START_MAX 5
 
 typedef struct {
     product_t product;
-    employee_t employees[MAX_EMPLOYEES];
+    employee_t employees[GAME_EMPLOYEES_MAX];
 } game_t;
 
 extern game_t game;

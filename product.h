@@ -2,7 +2,7 @@
 #define _PRODUCT_H_
 
 typedef struct {
-    char *name;
+    char name[256];
     int features;
     int bugs;
 } product_t;
