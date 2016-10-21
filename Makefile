@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-Wall
 
-HEADERS =
-OBJECTS = main.o
+HEADERS = main.h game.h
+OBJECTS = main.o menu.o game.o
 
 all: microsim
 
