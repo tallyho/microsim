@@ -1,6 +1,5 @@
-
-#import "product.h"
-#import "employee.h"
+#include "product.h"
+#include "employee.h"
 
 #ifndef _GAME_H_
 #define _GAME_H_

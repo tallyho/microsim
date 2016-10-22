@@ -1,20 +1,22 @@
-#import <stdio.h>
-#import <stdlib.h>
-#import <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#import "employee.h"
+#include "employee.h"
 
-static void employee_create_name(char *buf);
+static void employee_init_name(char *buf);
+static char * employee_action2str(employee_action_t action);
 
-void employee_create(employee_t *e) {
+void employee_init(employee_t *e) {
     e->valid = 1;
 
-    employee_create_name(e->name);
+    employee_init_name(e->name);
     e->speed = EMPLOYEE_MIN_SPEED + rand() % (EMPLOYEE_MAX_SPEED - EMPLOYEE_MIN_SPEED);
     e->accuracy = EMPLOYEE_MIN_ACCURACY + rand() % (EMPLOYEE_MAX_ACCURACY - EMPLOYEE_MIN_ACCURACY);
+    e->action = EMPLOYEE_ACTION_IDLE;
 }
 
-static void employee_create_name(char *buf) {
+static void employee_init_name(char *buf) {
     char *first[] = {
         "Michael",
         "Christopher",
@@ -76,4 +78,16 @@ void employee_print(employee_t *e) {
     printf("Name: %s\n", e->name);
     printf("Speed: %d\n", e->speed);
     printf("Accuracy: %d\n", e->accuracy);
+    printf("Action: %s\n", employee_action2str(e->action));
+}
+
+static char * employee_action2str(employee_action_t action) {
+    switch (action) {
+        case EMPLOYEE_ACTION_IDLE:
+            return "Idle";
+        case EMPLOYEE_ACTION_FEATURE:
+            return "Feature";
+        default:
+            return "Unknown";
+    }
 }

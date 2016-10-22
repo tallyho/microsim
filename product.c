@@ -1,9 +1,9 @@
-#import <stdio.h>
-#import <stdlib.h>
-#import <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#import "product.h"
-#import "game.h"
+#include "product.h"
+#include "game.h"
 
 static void product_create_name(char *buf);
 

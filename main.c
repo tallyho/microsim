@@ -1,29 +1,27 @@
-#import <stdio.h>
+#include <stdio.h>
 
-#import "menu.h"
-#import "game.h"
+#include "menu.h"
+#include "game.h"
 
 void show_main();
 
 void show_product() {
     print_title("PRODUCT STATUS");
     product_print(&game.product);
+    show_main();
+}
 
-    menu_entry_t menu[] = {
-        {.label = "Product Status", .cb = show_product},
-        {.label = "Business"},
-        {.label = "Employees", .cb = game_print_employees},
-        {.label = "Back", .cb = show_main},
-    };
-
-    do_menu(menu, sizeof(menu)/sizeof(menu_entry_t));
+void show_employees() {
+    print_title("EMPLOYEES");
+    game_print_employees();
+    show_main();
 }
 
 void show_main() {
     print_title("MAIN");
     menu_entry_t menu[] = {
         {.label = "Product Status", .cb = show_product},
-        {.label = "Employees", .cb = game_print_employees},
+        {.label = "Employees",      .cb = show_employees},
         {.label = "Quit"},
     };
 

@@ -1,6 +1,6 @@
-#import <stdio.h>
+#include <stdio.h>
 
-#import "menu.h"
+#include "menu.h"
 
 void do_menu(menu_entry_t *entries, int num_entries) {
     int c;
