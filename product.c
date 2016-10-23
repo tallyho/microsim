@@ -33,13 +33,15 @@
 
 static void product_create_name(char *buf);
 
-void product_init(product_t *product) {
+void product_init(product_t *product)
+{
     product_create_name(product->name);
     product->features = 100;
     product->bugs = 0;
 }
 
-static void product_create_name(char *buf) {
+static void product_create_name(char *buf)
+{
     char *adj[] = {
         "Super",
         "Sentient",
@@ -75,8 +77,8 @@ static void product_create_name(char *buf) {
     strcat(buf, version[random() % num_versions]);
 }
 
-
-void product_print(product_t *product) {
+void product_print(product_t *product)
+{
     printf("Name:%s\n", product->name);
     printf("Features Remaining:%d\n", product->features);
     printf("Bugs Remaining:%d\n", product->bugs);

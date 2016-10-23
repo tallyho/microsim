@@ -49,6 +49,6 @@ typedef struct {
 } employee_t;
 
 void employee_init(employee_t *e);
-void employee_print();
+void employee_print(employee_t *e);
 
 #endif /* _EMPLOYEE_H_ */

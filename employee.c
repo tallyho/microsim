@@ -31,9 +31,10 @@
 #include "employee.h"
 
 static void employee_init_name(char *buf);
-static char * employee_action2str(employee_action_t action);
+static char *employee_action2str(employee_action_t action);
 
-void employee_init(employee_t *e) {
+void employee_init(employee_t *e)
+{
     e->valid = 1;
 
     employee_init_name(e->name);
@@ -42,7 +43,8 @@ void employee_init(employee_t *e) {
     e->action = EMPLOYEE_ACTION_IDLE;
 }
 
-static void employee_init_name(char *buf) {
+static void employee_init_name(char *buf)
+{
     char *first[] = {
         "Michael",
         "Christopher",
@@ -96,7 +98,8 @@ static void employee_init_name(char *buf) {
     strcat(buf, last[random() % num_lasts]);
 }
 
-void employee_print(employee_t *e) {
+void employee_print(employee_t *e)
+{
     if (e->valid == 0) {
         return;
     }
@@ -107,7 +110,8 @@ void employee_print(employee_t *e) {
     printf("Action: %s\n", employee_action2str(e->action));
 }
 
-static char * employee_action2str(employee_action_t action) {
+static char *employee_action2str(employee_action_t action)
+{
     switch (action) {
         case EMPLOYEE_ACTION_IDLE:
             return "Idle";

@@ -30,21 +30,24 @@
 #include "game.h"
 #include "util.h"
 
-void show_main();
+void show_main(void);
 
-void show_product() {
+void show_product(void)
+{
     print_title("PRODUCT STATUS");
     product_print(&game.product);
     show_main();
 }
 
-void show_employees() {
+void show_employees(void)
+{
     print_title("EMPLOYEES");
     game_print_employees();
     show_main();
 }
 
-void show_main() {
+void show_main(void)
+{
     print_title("MAIN");
     menu_entry_t menu[] = {
         {.label = "Product Status", .cb = show_product},
@@ -55,7 +58,8 @@ void show_main() {
     do_menu(menu, ARRAY_SIZE(menu));
 }
 
-int main() {
+int main(int argc, char *argv[])
+{
     printf("Welcome to the Micromanager simulator");
     printf("You have been chosen as the manager for a failing business unit.\nPlease save the company!\n\n");
 

@@ -41,8 +41,8 @@ typedef struct {
 
 extern game_t game;
 
-void game_init();
-void game_print();
-void game_print_employees();
+void game_init(void);
+void game_print(void);
+void game_print_employees(void);
 
 #endif /* _GAME_H_ */
