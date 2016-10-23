@@ -2,6 +2,7 @@
 
 #include "menu.h"
 #include "game.h"
+#include "util.h"
 
 void show_main();
 
@@ -25,7 +26,7 @@ void show_main() {
         {.label = "Quit"},
     };
 
-    do_menu(menu, sizeof(menu)/sizeof(menu_entry_t));
+    do_menu(menu, ARRAY_SIZE(menu));
 }
 
 int main() {
