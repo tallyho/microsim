@@ -27,10 +27,11 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-typedef void (*menu_cb_t)();
+typedef void (*menu_cb_t)(void *context);
 typedef struct {
     char *label;
     menu_cb_t cb;
+    void *context;
 } menu_entry_t;
 
 void do_menu(menu_entry_t *entries, int num_entries);

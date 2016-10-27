@@ -31,8 +31,7 @@
 
 game_t game; //global
 
-void game_init(void)
-{
+void game_init(void) {
     product_init(&game.product);
     
     int i;
@@ -42,13 +41,11 @@ void game_init(void)
     }
 }
 
-void game_print(void)
-{
+void game_print(void) {
     product_print(&game.product);
 }
 
-void game_print_employees(void)
-{
+void game_print_employees(void) {
     int i;
     for (i = 0; i < GAME_EMPLOYEES_MAX; i++) {
         employee_t *e = &game.employees[i];

@@ -28,8 +28,7 @@
 
 #include "menu.h"
 
-void do_menu(menu_entry_t *entries, int num_entries)
-{
+void do_menu(menu_entry_t *entries, int num_entries) {
     int c;
     do {
         int i;
@@ -49,11 +48,10 @@ void do_menu(menu_entry_t *entries, int num_entries)
 
     menu_cb_t cb = entries[c].cb;
     if (cb) {
-        cb();
+        cb(entries[c].context);
     }
 }
 
-void print_title(char *title)
-{
+void print_title(char *title) {
     printf("------%s------\n", title);
 }
