@@ -34,7 +34,10 @@
 #define GAME_EMPLOYEES_START_MIN 2
 #define GAME_EMPLOYEES_START_MAX 5
 
+#define GAME_STEP_MS 250
+
 typedef struct {
+    long step;
     product_t product;
     employee_t employees[GAME_EMPLOYEES_MAX];
 } game_t;
@@ -44,5 +47,6 @@ extern game_t game;
 void game_init(void);
 void game_print(void);
 void game_print_employees(void);
+void game_step(void);
 
 #endif /* _GAME_H_ */

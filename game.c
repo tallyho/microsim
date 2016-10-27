@@ -55,3 +55,16 @@ void game_print_employees(void) {
         }
     }
 }
+
+void game_step(void) {
+    int i;
+    // handle input
+
+    for (i = 0; i < GAME_EMPLOYEES_MAX; i++) {
+        employee_t *e = &game.employees[i];
+        if (e->valid) {
+            employee_step(&game.employees[i]);
+        }
+    }
+    game.step++;
+}

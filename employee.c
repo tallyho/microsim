@@ -117,3 +117,6 @@ static char *employee_action2str(employee_action_t action) {
             return "Unknown";
     }
 }
+
+void employee_step(employee_t *e) {
+}

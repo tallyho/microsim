@@ -25,10 +25,53 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <termios.h>
+#include <string.h>
+#include <time.h>
 
 #include "menu.h"
 #include "game.h"
 #include "util.h"
+
+struct termios orig_termios;
+
+void reset_terminal_mode() {
+    tcsetattr(0, TCSANOW, &orig_termios);
+}
+
+void setup_terminal_mode() {
+    struct termios new_termios;
+
+    /* take two copies - one for now, one for later */
+    tcgetattr(0, &orig_termios);
+    memcpy(&new_termios, &orig_termios, sizeof(new_termios));
+
+    /* register cleanup handler, and set the new terminal mode */
+    atexit(reset_terminal_mode);
+    cfmakeraw(&new_termios);
+    tcsetattr(0, TCSANOW, &new_termios);
+}
+
+int kbhit(void) {
+    struct timeval tv = { 0L, 0L };
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(0, &fds);
+    return select(1, &fds, NULL, NULL, &tv);
+}
+
+int getch(void) {
+    int r;
+    unsigned char c;
+    if ((r = read(0, &c, sizeof(c))) < 0) {
+        return r;
+    } else {
+        return c;
+    }
+}
 
 void show_main(void);
 
@@ -55,14 +98,47 @@ void show_main(void) {
     do_menu(menu, ARRAY_SIZE(menu));
 }
 
+int handle_input() {
+    if (!kbhit()) {
+        return 0;
+    }
+
+    char c = getch();
+    if (c == 3 || c == 113 || c == 81) {
+        return 1; // ctrl-c, q, or Q
+    }
+
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
     printf("Welcome to the Micromanager simulator");
     printf("You have been chosen as the manager for a failing business unit.\nPlease save the company!\n\n");
 
+    setup_terminal_mode();
     game_init();
 
-    show_main();
-    printf("Bye!\n");
+    while (1) {
+        clock_t begin = clock();
+        
+        if (handle_input()) {
+            break; //user exited game
+        }
+
+        game_step();
+
+        // sleep for the remainder of the step
+        double secs = (clock() - begin) / CLOCKS_PER_SEC;
+        if (secs < GAME_STEP_MS*1000) {
+            struct timespec ts;
+            ts.tv_sec = 0;
+            ts.tv_nsec = (GAME_STEP_MS - secs*1000) * 1000000;
+            nanosleep(&ts, NULL);
+        }
+        game.step++;
+    }
+
+    printf("\rBye!\n");
 
 	return 0;
 }
