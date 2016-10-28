@@ -103,10 +103,10 @@ void employee_print(employee_t *e) {
         return;
     }
 
-    printf("Name: %s\n", e->name);
-    printf("Speed: %d\n", e->speed);
-    printf("Accuracy: %d\n", e->accuracy);
-    printf("Action: %s\n", employee_action2str(e->action));
+    printf("\rName: %s\n", e->name);
+    printf("\rSpeed: %d\n", e->speed);
+    printf("\rAccuracy: %d\n", e->accuracy);
+    printf("\rAction: %s %d left\n", employee_action2str(e->action), e->action_steps_left);
 }
 
 static char *employee_action2str(employee_action_t action) {
@@ -152,4 +152,17 @@ void employee_start_action(employee_t *e, employee_action_t action) {
 }
 
 void employee_step(employee_t *e) {
+    if (e->action_steps_left > 0) {
+        e->action_steps_left--;
+        if (e->action_steps_left == 0) {
+            switch(e->action) {
+            case EMPLOYEE_ACTION_FEATURE:
+                game.product.features_completed++;
+                break;
+            default:
+                break;
+            }
+            employee_start_action(e, EMPLOYEE_ACTION_IDLE);
+        }
+    }
 }

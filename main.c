@@ -93,10 +93,12 @@ int main(int argc, char *argv[]) {
     printf("Welcome to the Micromanager simulator");
     printf("You have been chosen as the manager for a failing business unit.\nPlease save the company!\n\n");
 
+    srand(time(NULL));
+
     setup_terminal_mode();
     activity_log_init();
     game_init();
-    menu_set_active(MENU_MAIN);
+    menu_init();
 
     while (1) {
         clock_t begin = clock();

@@ -31,6 +31,7 @@ typedef struct {
     char name[256];
     int features;
     int bugs;
+    int features_completed;
 } product_t;
 
 void product_init(product_t *product);

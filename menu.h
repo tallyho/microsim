@@ -27,11 +27,7 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-typedef enum {
-    MENU_MAIN,
-} menu_type_t;
-
-void menu_set_active(menu_type_t menu);
+void menu_init(void);
 int menu_handle_input(char c);
 
 #endif /* _MENU_H_ */
