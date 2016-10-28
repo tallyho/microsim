@@ -28,7 +28,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "game.h"
 #include "employee.h"
+#include "activity_log.h"
 
 static void employee_init_name(char *buf);
 static char *employee_action2str(employee_action_t action);
@@ -39,7 +41,7 @@ void employee_init(employee_t *e) {
     employee_init_name(e->name);
     e->speed = EMPLOYEE_MIN_SPEED + rand() % (EMPLOYEE_MAX_SPEED - EMPLOYEE_MIN_SPEED);
     e->accuracy = EMPLOYEE_MIN_ACCURACY + rand() % (EMPLOYEE_MAX_ACCURACY - EMPLOYEE_MIN_ACCURACY);
-    e->action = EMPLOYEE_ACTION_IDLE;
+    employee_start_action(e, EMPLOYEE_ACTION_IDLE);
 }
 
 static void employee_init_name(char *buf) {
@@ -109,12 +111,43 @@ void employee_print(employee_t *e) {
 
 static char *employee_action2str(employee_action_t action) {
     switch (action) {
-        case EMPLOYEE_ACTION_IDLE:
-            return "Idle";
-        case EMPLOYEE_ACTION_FEATURE:
-            return "Feature";
-        default:
-            return "Unknown";
+    case EMPLOYEE_ACTION_IDLE:
+        return "Idle";
+    case EMPLOYEE_ACTION_FEATURE:
+        return "Feature";
+    default:
+        return "Unknown";
+    }
+}
+
+void employee_start_action(employee_t *e, employee_action_t action) {
+    // stop working on last action
+    switch(e->action) {
+    case EMPLOYEE_ACTION_FEATURE:
+        activity_log("%s stopped developing features\n", e->name);
+        break;
+    case EMPLOYEE_ACTION_IDLE:
+        break;
+    default:
+        activity_log("%s stopped %s(%d)\n", e->name, employee_action2str(action), action); 
+        break;
+    }
+
+    e->action = action;
+
+    // start new action
+    switch(action) {
+    case EMPLOYEE_ACTION_IDLE:
+        e->action_steps_left = 0;
+        activity_log("%s is twiddling their thumbs\n", e->name);
+        break;
+    case EMPLOYEE_ACTION_FEATURE:
+        e->action_steps_left = GAME_STEPS_PER_SEC*30;
+        activity_log("%s started developing features\n", e->name);
+        break;
+    default:
+        activity_log("%s started %s(%d)\n", e->name, employee_action2str(action), action); 
+        break;
     }
 }
 

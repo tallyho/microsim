@@ -35,6 +35,7 @@
 #include "menu.h"
 #include "game.h"
 #include "util.h"
+#include "activity_log.h"
 
 struct termios orig_termios;
 
@@ -73,42 +74,19 @@ int getch(void) {
     }
 }
 
-void show_main(void);
-
-void show_product(void *context) {
-    print_title("PRODUCT STATUS");
-    product_print(&game.product);
-    show_main();
-}
-
-void show_employees(void *context) {
-    print_title("EMPLOYEES");
-    game_print_employees();
-    show_main();
-}
-
-void show_main(void) {
-    print_title("MAIN");
-    menu_entry_t menu[] = {
-        {.label = "Product Status", .cb = show_product},
-        {.label = "Employees",      .cb = show_employees},
-        {.label = "Quit"},
-    };
-
-    do_menu(menu, ARRAY_SIZE(menu));
-}
-
 int handle_input() {
     if (!kbhit()) {
         return 0;
     }
 
     char c = getch();
-    if (c == 3 || c == 113 || c == 81) {
+    tcflush(STDIN_FILENO, TCIFLUSH); // throw away the rest. only one at a time!
+
+    if (c == 3 || c == 'q' || c == 'Q') {
         return 1; // ctrl-c, q, or Q
     }
 
-    return 0;
+    return menu_handle_input(c);
 }
 
 int main(int argc, char *argv[]) {
@@ -116,7 +94,9 @@ int main(int argc, char *argv[]) {
     printf("You have been chosen as the manager for a failing business unit.\nPlease save the company!\n\n");
 
     setup_terminal_mode();
+    activity_log_init();
     game_init();
+    menu_set_active(MENU_MAIN);
 
     while (1) {
         clock_t begin = clock();

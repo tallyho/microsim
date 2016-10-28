@@ -46,10 +46,12 @@ typedef struct {
     int accuracy; /* how good is what they complete 50-100 */
 
     employee_action_t action;
+    int action_steps_left;
 } employee_t;
 
 void employee_init(employee_t *e);
 void employee_print(employee_t *e);
 void employee_step(employee_t *e);
+void employee_start_action(employee_t *e, employee_action_t action);
 
 #endif /* _EMPLOYEE_H_ */

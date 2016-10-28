@@ -35,6 +35,7 @@
 #define GAME_EMPLOYEES_START_MAX 5
 
 #define GAME_STEP_MS 250
+#define GAME_STEPS_PER_SEC (1000 / GAME_STEP_MS)
 
 typedef struct {
     long step;

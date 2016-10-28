@@ -24,52 +24,13 @@
  * SOFTWARE.
  */
 
-#include <stdio.h>
+#ifndef _ACTIVITY_LOG_H_
+#define _ACTIVITY_LOG_H_
 
-#include "menu.h"
+void activity_log_init(void);
+void activity_log(const char *format, ...);
 
-typedef enum {
-    MAIN_MENU_PRDUCT,
-    MAIN_MENU_EMPLOYEES,
-    MAIN_MENU_QUIT,
-} main_menu_option_t;
+extern FILE *activity_log_file;
 
-menu_type_t active_menu;
+#endif /* _ACTIVITY_LOG_H_ */
 
-static void print_menu(menu_type_t menu) {
-    switch(menu) {
-    case MENU_MAIN:
-        printf("\r---- Main Menu ----\n");
-        printf("\r1) Product Status\n");
-        printf("\r2) Employees\n");
-        printf("\r3) Quit\n");
-        break;
-        
-    default:
-        printf("UNKNOWN\n");
-        break;
-    }
-}
-
-
-void menu_set_active(menu_type_t menu) {
-    active_menu = menu;
-
-    print_menu(active_menu);
-}
-
-int menu_handle_input(char c) {
-    switch(active_menu) {
-    case MENU_MAIN:
-        switch(c - '1') {
-        case MAIN_MENU_QUIT:
-            return 1;
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    return 0;
-}

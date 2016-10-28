@@ -27,14 +27,11 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
-typedef void (*menu_cb_t)(void *context);
-typedef struct {
-    char *label;
-    menu_cb_t cb;
-    void *context;
-} menu_entry_t;
+typedef enum {
+    MENU_MAIN,
+} menu_type_t;
 
-void do_menu(menu_entry_t *entries, int num_entries);
-void print_title(char *title);
+void menu_set_active(menu_type_t menu);
+int menu_handle_input(char c);
 
 #endif /* _MENU_H_ */

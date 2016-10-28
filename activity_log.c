@@ -25,51 +25,25 @@
  */
 
 #include <stdio.h>
+#include <assert.h>
+#include <stdarg.h>
 
-#include "menu.h"
+#include "activity_log.h"
 
-typedef enum {
-    MAIN_MENU_PRDUCT,
-    MAIN_MENU_EMPLOYEES,
-    MAIN_MENU_QUIT,
-} main_menu_option_t;
+FILE *activity_log_file;
 
-menu_type_t active_menu;
+void activity_log_init(void) {
+    activity_log_file = fopen("activity.log", "a+");
+    assert(activity_log_file != NULL);
 
-static void print_menu(menu_type_t menu) {
-    switch(menu) {
-    case MENU_MAIN:
-        printf("\r---- Main Menu ----\n");
-        printf("\r1) Product Status\n");
-        printf("\r2) Employees\n");
-        printf("\r3) Quit\n");
-        break;
-        
-    default:
-        printf("UNKNOWN\n");
-        break;
-    }
+    activity_log("------------- NEW GAME ----------------\n");
 }
 
 
-void menu_set_active(menu_type_t menu) {
-    active_menu = menu;
-
-    print_menu(active_menu);
-}
-
-int menu_handle_input(char c) {
-    switch(active_menu) {
-    case MENU_MAIN:
-        switch(c - '1') {
-        case MAIN_MENU_QUIT:
-            return 1;
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    return 0;
+void activity_log(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    vfprintf(activity_log_file, format, args);
+    fflush(activity_log_file);
+    va_end(args);
 }
