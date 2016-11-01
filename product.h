@@ -29,12 +29,23 @@
 
 typedef struct {
     char name[256];
-    int features;
-    int bugs;
-    int features_completed;
+    struct {
+        int total;
+        int completed;
+        int active;
+    } features;
+
+    struct {
+        int total;
+        int completed;
+        int active;
+    } bugs;
 } product_t;
 
 void product_init(product_t *product);
 void product_print(product_t *product);
+
+int product_features_idle_remaining(product_t *product);
+int product_bugs_idle_remaining(product_t *product);
 
 #endif /* _PRODUCT_H_ */

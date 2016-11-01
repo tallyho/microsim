@@ -34,6 +34,8 @@
 
 static void employee_init_name(char *buf);
 static char *employee_action2str(employee_action_t action);
+static void employee_action_feature_complete(employee_t *e);
+static void employee_action_bug_complete(employee_t *e);
 
 void employee_init(employee_t *e) {
     e->valid = 1;
@@ -103,10 +105,10 @@ void employee_print(employee_t *e) {
         return;
     }
 
-    printf("\rName: %s\n", e->name);
-    printf("\rSpeed: %d\n", e->speed);
-    printf("\rAccuracy: %d\n", e->accuracy);
-    printf("\rAction: %s %d left\n", employee_action2str(e->action), e->action_steps_left);
+    printf("Name: %s\r\n", e->name);
+    printf("Speed: %d\r\n", e->speed);
+    printf("Accuracy: %d\r\n", e->accuracy);
+    printf("Action: %s %d/%d\r\n", employee_action2str(e->action.type), e->action.steps.completed, e->action.steps.total);
 }
 
 static char *employee_action2str(employee_action_t action) {
@@ -115,54 +117,105 @@ static char *employee_action2str(employee_action_t action) {
         return "Idle";
     case EMPLOYEE_ACTION_FEATURE:
         return "Feature";
+    case EMPLOYEE_ACTION_BUG:
+        return "Bug";
     default:
         return "Unknown";
     }
 }
 
-void employee_start_action(employee_t *e, employee_action_t action) {
+void employee_start_action(employee_t *e, employee_action_t type) {
     // stop working on last action
-    switch(e->action) {
-    case EMPLOYEE_ACTION_FEATURE:
-        activity_log("%s stopped developing features\n", e->name);
-        break;
-    case EMPLOYEE_ACTION_IDLE:
-        break;
-    default:
-        activity_log("%s stopped %s(%d)\n", e->name, employee_action2str(action), action); 
-        break;
+    if (e->action.active) {
+        switch(e->action.type) {
+        case EMPLOYEE_ACTION_FEATURE:
+            game.product.features.active--;
+            activity_log("%s stopped developing features\n", e->name);
+            break;
+        case EMPLOYEE_ACTION_BUG:
+            game.product.bugs.active--;
+            activity_log("%s stopped fixing bugs\n", e->name);
+            break;
+        case EMPLOYEE_ACTION_IDLE:
+            break;
+        default:
+            activity_log("%s stopped at %d/%d\r\n", e->name, employee_action2str(e->action.type), e->action.steps.completed, e->action.steps.total); 
+            break;
+        }
     }
 
-    e->action = action;
+    e->action.active = 1;
+    e->action.type = type;
+    e->action.steps.completed = 0;
 
     // start new action
-    switch(action) {
+    switch(type) {
     case EMPLOYEE_ACTION_IDLE:
-        e->action_steps_left = 0;
         activity_log("%s is twiddling their thumbs\n", e->name);
         break;
     case EMPLOYEE_ACTION_FEATURE:
-        e->action_steps_left = GAME_STEPS_PER_SEC*30;
+        e->action.steps.total = EMPLOYEE_ACTION_FEATURE_STEPS;
+        game.product.features.active++;
         activity_log("%s started developing features\n", e->name);
         break;
+    case EMPLOYEE_ACTION_BUG:
+        e->action.steps.total = EMPLOYEE_ACTION_BUG_STEPS;
+        game.product.bugs.active++;
+        activity_log("%s started fixing bugs\n", e->name);
+        break;
     default:
-        activity_log("%s started %s(%d)\n", e->name, employee_action2str(action), action); 
+        activity_log("%s started (%d)\r\n", e->name, employee_action2str(e->action.type), e->action.steps.total); 
         break;
     }
 }
 
 void employee_step(employee_t *e) {
-    if (e->action_steps_left > 0) {
-        e->action_steps_left--;
-        if (e->action_steps_left == 0) {
-            switch(e->action) {
+    if (e->action.type != EMPLOYEE_ACTION_IDLE) {
+        if (e->action.steps.completed++ == e->action.steps.total) {
+            e->action.active = 0;
+
+            switch(e->action.type) {
             case EMPLOYEE_ACTION_FEATURE:
-                game.product.features_completed++;
+                employee_action_feature_complete(e);
+                break;
+            case EMPLOYEE_ACTION_BUG:
+                employee_action_bug_complete(e);
                 break;
             default:
                 break;
             }
             employee_start_action(e, EMPLOYEE_ACTION_IDLE);
         }
+    }
+}
+
+static void employee_action_feature_complete(employee_t *e) {
+    int bug_chance;
+
+    /* chance they create a bug instead! */
+    /* 25% base chance */
+    bug_chance = random() % 1000 * e->accuracy / 100;
+    if (bug_chance < 250) {
+        activity_log("%s created a bug!\r\n", e->name);
+        game.product.bugs.total++;
+    } else {
+        activity_log("%s completed a feature!\r\n", e->name);
+        game.product.features.completed++;
+        game.product.features.active--;
+    }
+}
+
+static void employee_action_bug_complete(employee_t *e) {
+    int bug_chance;
+
+    /* chance they create a bug instead! */
+    /* 25% base chance */
+    bug_chance = random() % 1000 * e->accuracy / 100;
+    game.product.bugs.active--;
+    if (bug_chance < 250) {
+        activity_log("%s failed to fix bug!\r\n", e->name);
+    } else {
+        activity_log("%s fixed a bug!\r\n", e->name);
+        game.product.bugs.completed++;
     }
 }

@@ -33,25 +33,35 @@
 #define EMPLOYEE_MIN_ACCURACY 80
 #define EMPLOYEE_MAX_ACCURACY 100
 
+#define EMPLOYEE_ACTION_FEATURE_STEPS GAME_STEPS_PER_SEC*30
+#define EMPLOYEE_ACTION_BUG_STEPS GAME_STEPS_PER_SEC*15
+
 typedef enum {
     EMPLOYEE_ACTION_IDLE,
     EMPLOYEE_ACTION_FEATURE,
+    EMPLOYEE_ACTION_BUG,
     EMPLOYEE_ACTION_NUM
 } employee_action_t;
 
 typedef struct {
     char valid;
     char name[256];
-    int speed;    /* how fast do they complete things 50-100 */
-    int accuracy; /* how good is what they complete 50-100 */
+    int speed;    /* how fast do they complete things multiplier around 100 */
+    int accuracy; /* how good is what they complete ?? */
 
-    employee_action_t action;
-    int action_steps_left;
+    struct {
+        char active;
+        employee_action_t type;
+        struct {
+            int total;
+            int completed;
+        } steps;
+    } action;
 } employee_t;
 
 void employee_init(employee_t *e);
 void employee_print(employee_t *e);
 void employee_step(employee_t *e);
-void employee_start_action(employee_t *e, employee_action_t action);
+void employee_start_action(employee_t *e, employee_action_t type);
 
 #endif /* _EMPLOYEE_H_ */

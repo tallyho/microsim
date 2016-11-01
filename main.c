@@ -90,8 +90,8 @@ int handle_input() {
 }
 
 int main(int argc, char *argv[]) {
-    printf("Welcome to the Micromanager simulator");
-    printf("You have been chosen as the manager for a failing business unit.\nPlease save the company!\n\n");
+    printf("Welcome to the Micromanager simulator\r\n");
+    printf("You have been chosen as the manager for a failing business unit.\r\nPlease save the company!\r\n\n");
 
     srand(time(NULL));
 

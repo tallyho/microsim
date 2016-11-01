@@ -35,8 +35,8 @@ static void product_create_name(char *buf);
 
 void product_init(product_t *product) {
     product_create_name(product->name);
-    product->features = 100;
-    product->bugs = 0;
+    product->features.total = 100;
+    product->bugs.total = 0;
 }
 
 static void product_create_name(char *buf) {
@@ -76,7 +76,15 @@ static void product_create_name(char *buf) {
 }
 
 void product_print(product_t *product) {
-    printf("Name:%s\n", product->name);
-    printf("Features Remaining:%d\n", product->features);
-    printf("Bugs Remaining:%d\n", product->bugs);
+    printf("Name:%s\r\n", product->name);
+    printf("Features %d of %d. %d active\r\n", product->features.completed, product->features.total, product->features.active);
+    printf("Bugs %d of %d. %d active\r\n", product->bugs.completed, product->bugs.total, product->bugs.active);
+}
+
+int product_features_idle_remaining(product_t *product) {
+    return product->features.total - product->features.completed - product->features.active;
+}
+
+int product_bugs_idle_remaining(product_t *product) {
+    return product->bugs.total - product->bugs.completed - product->bugs.active;
 }

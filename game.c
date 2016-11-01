@@ -26,12 +26,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "game.h"
 
 game_t game; //global
 
 void game_init(void) {
+    memset(&game, 0, sizeof(game_t));
     product_init(&game.product);
     
     int i;

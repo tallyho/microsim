@@ -37,7 +37,8 @@ typedef enum {
 } menu_type_t;
 
 typedef enum {
-    MAIN_MENU_PRDUCT,
+    MAIN_MENU_MEETING,
+    MAIN_MENU_COMPUTER,
     MAIN_MENU_EMPLOYEES,
     MAIN_MENU_QUIT,
 } main_menu_option_t;
@@ -48,16 +49,17 @@ employee_t *active_employee;
 static void print_menu(menu_type_t menu) {
     switch(menu) {
     case MENU_MAIN:
-        printf("\r---- Main Menu ----\n");
-        printf("\r1) Product Status\n");
-        printf("\r2) Employees\n");
-        printf("\r3) Quit\n");
+        printf("---- Main Menu ----\r\n");
+        printf("1) Call a meeting\r\n");
+        printf("2) Look at your computer\r\n");
+        printf("3) Talk to employees\r\n");
+        printf("4) Quit\r\n");
         break;
 
     case MENU_EMPLOYEES:
-        printf("\r---- Employees ----\n");
+        printf("\r---- Employees ----\r\n");
 
-        printf("\rB) Back\n\n");
+        printf("\rB) Back\r\n\n");
 
         int i;
         int employee_count = 0;
@@ -67,21 +69,22 @@ static void print_menu(menu_type_t menu) {
                 continue;
             }
             employee_count++;
-            printf("\r%d) %s\n", employee_count, e->name);
+            printf("%d) %s\r\n", employee_count, e->name);
         }
         break;
 
     case MENU_DIRECT_EMPLOYEE:
-        printf("\r---- Direct Employee ----\n");
+        printf("---- Direct Employee ----\r\n");
         employee_print(active_employee);
         printf("\n");
-        printf("\rB) Back\n");
-        printf("\r1) Twiddle thumbs\n");
-        printf("\r2) Work on features\n");
+        printf("B) Back\r\n");
+        printf("1) Twiddle thumbs\r\n");
+        printf("2) Work on features\r\n");
+        printf("3) Fix bugs\r\n");
         break;
         
     default:
-        printf("UNKNOWN\n");
+        printf("UNKNOWN\r\n");
         break;
     }
 }
@@ -104,6 +107,10 @@ int menu_handle_input(char c) {
         switch(c - '1') {
         case MAIN_MENU_QUIT:
             return 1;
+        case MAIN_MENU_MEETING:
+            product_print(&game.product);
+            print_menu(MENU_MAIN);
+            break;
         case MAIN_MENU_EMPLOYEES:
             menu_set_active(MENU_EMPLOYEES);
             break;
@@ -143,14 +150,20 @@ int menu_handle_input(char c) {
             menu_set_active(MENU_EMPLOYEES);
             break;
         case '1':
-            if (active_employee->action != EMPLOYEE_ACTION_IDLE) {
+            if (active_employee->action.type != EMPLOYEE_ACTION_IDLE) {
                 employee_start_action(active_employee, EMPLOYEE_ACTION_IDLE);
                 menu_set_active(MENU_EMPLOYEES);
             }
             break;
         case '2':
-            if (active_employee->action != EMPLOYEE_ACTION_FEATURE) {
+            if (active_employee->action.type != EMPLOYEE_ACTION_FEATURE && product_features_idle_remaining(&game.product)) {
                 employee_start_action(active_employee, EMPLOYEE_ACTION_FEATURE);
+                menu_set_active(MENU_EMPLOYEES);
+            }
+            break;
+        case '3':
+            if (active_employee->action.type != EMPLOYEE_ACTION_BUG && product_bugs_idle_remaining(&game.product)) {
+                employee_start_action(active_employee, EMPLOYEE_ACTION_BUG);
                 menu_set_active(MENU_EMPLOYEES);
             }
             break;
