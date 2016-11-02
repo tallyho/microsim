@@ -28,9 +28,8 @@
 #define _ACTIVITY_LOG_H_
 
 void activity_log_init(void);
-void activity_log(const char *format, ...);
-
-extern FILE *activity_log_file;
+void activity_log(const char *format, ...)
+ __attribute__ (( format(printf,1,2) ));
 
 #endif /* _ACTIVITY_LOG_H_ */
 

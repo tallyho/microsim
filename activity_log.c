@@ -30,17 +30,18 @@
 
 #include "activity_log.h"
 
-FILE *activity_log_file;
+static FILE *activity_log_file;
 
 void activity_log_init(void) {
     activity_log_file = fopen("activity.log", "a+");
     assert(activity_log_file != NULL);
 
-    activity_log("------------- NEW GAME ----------------\n");
+    activity_log("---------------------------------- NEW GAME ----------------------------------\n");
 }
 
-
 void activity_log(const char *format, ...) {
+    assert(activity_log_file != NULL);
+
     va_list args;
     va_start(args, format);
     vfprintf(activity_log_file, format, args);
