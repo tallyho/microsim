@@ -43,7 +43,7 @@ void reset_terminal_mode() {
     tcsetattr(0, TCSANOW, &orig_termios);
 }
 
-void setup_terminal_mode() {
+void setup_terminal_mode(void) {
     struct termios new_termios;
 
     /* take two copies - one for now, one for later */
@@ -74,7 +74,7 @@ int getch(void) {
     }
 }
 
-int handle_input() {
+int handle_input(void) {
     if (!kbhit()) {
         return 0;
     }
