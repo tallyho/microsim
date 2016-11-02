@@ -90,13 +90,20 @@ int handle_input(void) {
 }
 
 int main(int argc, char *argv[]) {
+    time_t now;
+
     printf("Welcome to the Micromanager simulator\r\n");
     printf("You have been chosen as the manager for a failing business unit.\r\nPlease save the company!\r\n\n");
 
-    srand(time(NULL));
-
     setup_terminal_mode();
     activity_log_init();
+
+    // Seed the RNG
+    now = time(NULL);
+    srand(now);
+    printf("Random seed:%ld\r\n", now);
+    activity_log("Random seed:%ld\r\n", now);
+
     game_init();
     menu_init();
 
