@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "random.h"
 #include "game.h"
 
 game_t game; //global
@@ -37,7 +38,7 @@ void game_init(void) {
     product_init(&game.product);
     
     int i;
-    int num_employees = GAME_EMPLOYEES_START_MIN + rand() % (GAME_EMPLOYEES_START_MAX-GAME_EMPLOYEES_START_MIN);
+    int num_employees = rand_uint32_range(GAME_EMPLOYEES_START_MIN, GAME_EMPLOYEES_START_MAX);
     for (i = 0; i < num_employees; i++) {
         employee_init(&game.employees[i]);
     }

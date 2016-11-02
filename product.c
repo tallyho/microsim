@@ -28,6 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "util.h"
+#include "random.h"
 #include "product.h"
 #include "game.h"
 
@@ -47,7 +49,6 @@ static void product_create_name(char *buf) {
         "Extreme",
         "Mobile-Centric",
     };
-    int num_adjs = 5;
 
     char *noun[] = {
         "Computer",
@@ -56,7 +57,6 @@ static void product_create_name(char *buf) {
         "Enabler",
         "Chip",
     };
-    int num_nouns = 5;
 
     char *version[] = {
         "V4",
@@ -65,14 +65,13 @@ static void product_create_name(char *buf) {
         "0.0.1",
         "Beta",
     };
-    int num_versions = 5;
 
-    buf[0] = 0;
-    strcat(buf, adj[random() % num_adjs]);
+    buf[0] = '\0';
+    strcat(buf, adj[rand_uint32_max(ARRAY_SIZE(adj))]);
     strcat(buf, " ");
-    strcat(buf, noun[random() % num_nouns]);
+    strcat(buf, noun[rand_uint32_max(ARRAY_SIZE(noun))]);
     strcat(buf, " ");
-    strcat(buf, version[random() % num_versions]);
+    strcat(buf, version[rand_uint32_max(ARRAY_SIZE(version))]);
 }
 
 void product_print(product_t *product) {

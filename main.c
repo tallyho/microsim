@@ -32,6 +32,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "random.h"
 #include "menu.h"
 #include "game.h"
 #include "util.h"
@@ -100,7 +101,7 @@ int main(int argc, char *argv[]) {
 
     // Seed the RNG
     now = time(NULL);
-    srand(now);
+    rand_init(now);
     printf("Random seed:%ld\r\n", now);
     activity_log("Random seed:%ld\r\n", now);
 

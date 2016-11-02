@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include "util.h"
+#include "random.h"
 #include "game.h"
 #include "employee.h"
 #include "activity_log.h"
@@ -42,8 +43,8 @@ void employee_init(employee_t *e) {
     e->valid = 1;
 
     employee_init_name(e->name);
-    e->speed = EMPLOYEE_MIN_SPEED + rand() % (EMPLOYEE_MAX_SPEED - EMPLOYEE_MIN_SPEED);
-    e->accuracy = EMPLOYEE_MIN_ACCURACY + rand() % (EMPLOYEE_MAX_ACCURACY - EMPLOYEE_MIN_ACCURACY);
+    e->speed = rand_uint32_range(EMPLOYEE_MIN_SPEED, EMPLOYEE_MAX_SPEED);
+    e->accuracy = rand_uint32_range(EMPLOYEE_MIN_ACCURACY, EMPLOYEE_MAX_ACCURACY);
     employee_start_action(e, EMPLOYEE_ACTION_IDLE);
 }
 
@@ -72,7 +73,6 @@ static void employee_init_name(char *buf) {
         "Lauren",
         "Megan",
     };
-    int num_firsts = ARRAY_SIZE(first);
 
     char *last[] = {
         "Irwin",
@@ -92,12 +92,11 @@ static void employee_init_name(char *buf) {
         "Kirkland",
         "Kidd",
     };
-    int num_lasts = ARRAY_SIZE(last);
 
     buf[0] = '\0';
-    strcat(buf, first[random() % num_firsts]);
+    strcat(buf, first[rand_uint32_max(ARRAY_SIZE(first))]);
     strcat(buf, " ");
-    strcat(buf, last[random() % num_lasts]);
+    strcat(buf, last[rand_uint32_max(ARRAY_SIZE(last))]);
 }
 
 void employee_print(employee_t *e) {
@@ -194,7 +193,7 @@ static void employee_action_feature_complete(employee_t *e) {
 
     /* chance they create a bug instead! */
     /* 25% base chance */
-    bug_chance = random() % 1000 * e->accuracy / 100;
+    bug_chance = rand_uint32_max(1000) * e->accuracy / 100;
     if (bug_chance < 250) {
         activity_log("%s created a bug!\r\n", e->name);
         game.product.bugs.total++;
@@ -210,7 +209,7 @@ static void employee_action_bug_complete(employee_t *e) {
 
     /* chance they create a bug instead! */
     /* 25% base chance */
-    bug_chance = random() % 1000 * e->accuracy / 100;
+    bug_chance = rand_uint32_max(1000) * e->accuracy / 100;
     game.product.bugs.active--;
     if (bug_chance < 250) {
         activity_log("%s failed to fix bug!\r\n", e->name);
