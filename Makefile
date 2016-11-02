@@ -22,19 +22,39 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-CC=gcc
-CFLAGS=-Wall
+CC       := gcc
+RM       ?= rm
+SHELL    := /bin/bash
+TARGET   := microsim
 
-HEADERS = main.h game.h product.h employee.h acivity_log.h
-OBJECTS = main.o menu.o game.o product.o employee.o activity_log.c
+SRCS     := $(wildcard *.c)
+OBJS     := $(SRCS:.c=.o)
+DEPS     := $(SRCS:.c=.d)
 
-all: microsim
+CFLAGS   += -Wall
+CFLAGS   += -g -DDEBUG
+CFLAGS   += -I.
 
-microsim: $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@
+# Default build rule
+.PHONY: all
+all: $(TARGET)
 
-%.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
 
+%.o: %.c
+	$(CC) -c -MP -MMD $(CFLAGS) -o $@ $<
+
+.PHONY: clean
 clean:
-	rm -rf *.o microsim
+	$(RM) -rf $(OBJS) $(DEPS) $(TARGET)
+
+# Add dependencies
+-include $(DEPS)
+
+# Clear out built-in build rules
+.SUFFIXES:
+
+# Debug print
+print-%:
+	@echo $*=$($*)
