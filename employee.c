@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "util.h"
 #include "game.h"
 #include "employee.h"
 #include "activity_log.h"
@@ -71,7 +72,7 @@ static void employee_init_name(char *buf) {
         "Lauren",
         "Megan",
     };
-    int num_firsts = 21;
+    int num_firsts = ARRAY_SIZE(first);
 
     char *last[] = {
         "Irwin",
@@ -89,12 +90,11 @@ static void employee_init_name(char *buf) {
         "Good",
         "Byers",
         "Kirkland",
-        "Kidd"   
+        "Kidd",
     };
+    int num_lasts = ARRAY_SIZE(last);
 
-    int num_lasts = 16;
-
-    buf[0] = 0;
+    buf[0] = '\0';
     strcat(buf, first[random() % num_firsts]);
     strcat(buf, " ");
     strcat(buf, last[random() % num_lasts]);
