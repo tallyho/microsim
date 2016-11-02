@@ -139,7 +139,7 @@ void employee_start_action(employee_t *e, employee_action_t type) {
         case EMPLOYEE_ACTION_IDLE:
             break;
         default:
-            activity_log("%s stopped at %d/%d\r\n", e->name, employee_action2str(e->action.type), e->action.steps.completed, e->action.steps.total); 
+            activity_log("%s stopped %s at %d/%d\r\n", e->name, employee_action2str(e->action.type), e->action.steps.completed, e->action.steps.total);
             break;
         }
     }
@@ -164,7 +164,7 @@ void employee_start_action(employee_t *e, employee_action_t type) {
         activity_log("%s started fixing bugs\n", e->name);
         break;
     default:
-        activity_log("%s started (%d)\r\n", e->name, employee_action2str(e->action.type), e->action.steps.total); 
+        activity_log("%s started %s (%d)\r\n", e->name, employee_action2str(e->action.type), e->action.steps.total);
         break;
     }
 }
